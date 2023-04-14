@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\MaiHuyHoat_Practice.props" />
-</Project>
