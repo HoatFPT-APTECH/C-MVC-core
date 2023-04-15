@@ -9,7 +9,7 @@ using DWAS_T2111E_MaiHuyHoat.Models;
 
 namespace DWAS_T2111E_MaiHuyHoat.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class EmployeesController : ControllerBase
     {
@@ -35,20 +35,21 @@ namespace DWAS_T2111E_MaiHuyHoat.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetEmployee(int id)
         {
-            var data = from e in _context.Employees
-                       join pe in _context.ProjectEmployees on e.EmployeeId equals pe.EmployeeId
-                       join p in _context.Projects on pe.ProjectId equals p.ProjectId
-                       where e.EmployeeId == id
-                       select ((e,p) => new EP
-                       {
-                           EP.EmployeeId = e.EmployeeId,
-                           EP.EmployeeName = e.EmployeeName,
-                           EP.EmployeeDOB = e.EmployeeDOB,
-                           EP.EmployeeDepartment = e.EmployeeDepartment,
-                           EP.Projects = p.ToList()
-
-                       }) ;
-            return data==null? NotFound("No Data"): Ok(data);
+            var employee = _context.Employees.Find(id);
+            var listProducts = from p in _context.Projects
+                               join pe in _context.ProjectEmployees on p.ProjectId equals pe.ProjectId
+                               where pe.EmployeeId == id
+                               select p;
+            if (employee == null) return NotFound("No Data");
+            var data = new EP
+            {
+                EmployeeId = employee.EmployeeId,
+                EmployeeName = employee.EmployeeName,
+                EmployeeDOB = employee.EmployeeDOB,
+                EmployeeDepartment = employee.EmployeeDepartment,
+                projects = listProducts.ToList(),
+            };
+            return  Ok(data);
         }
 
         // PUT: api/Employees/5

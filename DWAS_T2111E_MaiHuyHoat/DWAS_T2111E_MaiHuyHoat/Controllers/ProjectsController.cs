@@ -9,7 +9,7 @@ using DWAS_T2111E_MaiHuyHoat.Models;
 
 namespace DWAS_T2111E_MaiHuyHoat.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ProjectsController : ControllerBase
     {
@@ -35,20 +35,24 @@ namespace DWAS_T2111E_MaiHuyHoat.Controllers
 
         // GET: api/Projects/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Project>> GetProject(int id)
+        public async Task<ActionResult> GetProject(int id)
         {
-          if (_context.Projects == null)
-          {
-              return NotFound();
-          }
-            var project = await _context.Projects.FindAsync(id);
+            var project = _context.Projects.Find(id);
+            if(project == null) { return NotFound("No Data"); }
+            var listEmployee=from e in _context.Employees
+                             join pe in _context.ProjectEmployees on e.EmployeeId equals pe.ProjectId
+                             where pe.ProjectId == id
+                             select e;
 
-            if (project == null)
+            var data = new PE
             {
-                return NotFound();
-            }
-
-            return project;
+                ProjectId = project.ProjectId,
+                ProjectName = project.ProjectName,
+                ProjectStartDate = project.ProjectStartDate,
+                ProjectEndDate = project.ProjectEndDate,
+                Employees = listEmployee.ToList(),
+            };
+            return Ok(data);
         }
 
         // PUT: api/Projects/5

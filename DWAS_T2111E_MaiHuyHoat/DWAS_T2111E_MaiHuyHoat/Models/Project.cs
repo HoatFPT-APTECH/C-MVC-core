@@ -18,5 +18,6 @@ namespace DWAS_T2111E_MaiHuyHoat.Models
     
         public virtual ICollection<ProjectEmployee> ProjectEmployees { get; set; }
 
+       
     }
 }

@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\DWAS_T2111E_MaiHuyHoat.props" />
+</Project>
