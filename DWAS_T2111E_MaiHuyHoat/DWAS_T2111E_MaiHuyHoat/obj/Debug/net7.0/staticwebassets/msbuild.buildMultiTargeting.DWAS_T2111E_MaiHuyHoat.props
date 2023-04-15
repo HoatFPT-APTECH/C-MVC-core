@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\DWAS_T2111E_MaiHuyHoat.props" />
-</Project>
